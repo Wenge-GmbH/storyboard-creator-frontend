@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import App from './components/app';
+import Dashboard from './components/dashboard';
+import Storyboard from './components/storyboard';
+import MainWrapper from './components/main-wrapper';
 
 class MainRouter extends Component {
   render() {
     return (
       <div>
-        <Route path="/" component={App} />
+        <Route path="/" component={MainWrapper} />
         <Switch>
+          <Route path="/storyboard" component={Storyboard} />
+          <Route path="/" component={Dashboard} />
           {/* <Route path="/signin" component={Signin} />
           <Route path="/signout" component={Signout} />
           <PrivateRoute path="/log/success" component={SuccessLog} />

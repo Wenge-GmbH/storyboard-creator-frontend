@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
-import './scss/index.scss';
+import './scss/index.min.css';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
@@ -19,7 +19,7 @@ const store = createStore(
   )
 );
 
-const token = localStorage.getItem('token');
+// const token = localStorage.getItem('token');
 //
 // if (token) {
 //   store.dispatch({ type: AUTH_USER })

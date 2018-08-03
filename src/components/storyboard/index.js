@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class App extends Component {
+class Storyboard extends Component {
   render() {
     return (
-      <div className="App">
-
+      <div>
+        hi
       </div>
     );
   }
 }
 
-export default App;
+export default Storyboard;
