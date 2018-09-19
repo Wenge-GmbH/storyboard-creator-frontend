@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import Suggestions from './suggestions';
+const io = require('socket.io-client');
+const socket = io('http://localhost:3001');
 
-const getTriggerRange = (trigger) => {
-  const selection = window.getSelection();
-  if(selection.rangeCount === 0) return null;
-  const range = selection.getRangeAt(0);
-  const text = range.startContainer.textContent.substring(0, range.startOffset);
-  if(/s+$/.test(text)) return null;
-  const index = text.lastIndexOf(trigger);
-  if(index === -1) return null;
 
-  return {
-    text: text.substring(index),
-    start: index,
-    end: range.startOffset,
-  }
-}
 
 class SimpleEditor extends Component {
   state = {
@@ -24,19 +12,17 @@ class SimpleEditor extends Component {
     autocompleteState: null
   }
 
+  componentDidMount() {
+    socket.on('editor-state', (rawData) => {
+      const editorState = EditorState.createWithContent(convertFromRaw(rawData));
+      this.setState({editorState});
+    })
+  }
+
   onChange = editorState => {
     return this.setState({editorState}, () => {
-      const triggerRange = getTriggerRange('#');
-      if(!triggerRange) {
-        this.setState({autocompleteState: null});
-        return;
-      }
-      console.log('as');
-      this.setState({
-        autocompleteSate: {
-          searchText: triggerRange.text.slice(1, triggerRange.text.length),
-        },
-      })
+      const contentSate = editorState.getCurrentContent();
+      socket.emit('editor-state', convertToRaw(contentSate));
     });
   };
 
@@ -51,15 +37,6 @@ class SimpleEditor extends Component {
   }
   _onBoldClick = () => {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
-  }
-  enderSuggestion(text) {
-    const { editorState, autocompleteState } = this.state;
-
-    this.onChange(
-      addHashTag(editorState, autocompleteState, text)
-    );
-
-    this.setState({ autocompleteState: null });
   }
 
   render() {
