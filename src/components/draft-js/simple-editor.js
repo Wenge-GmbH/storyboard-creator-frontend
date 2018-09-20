@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, SelectionState } from 'draft-js';
 import Suggestions from './suggestions';
 const io = require('socket.io-client');
-const socket = io('http://localhost:3001');
+console.log(process.env.SOCKET_URL);
+const socket = io(process.env.SOCKET_URL || 'http://localhost:3001');
 
 
 
@@ -13,16 +14,30 @@ class SimpleEditor extends Component {
   }
 
   componentDidMount() {
-    socket.on('editor-state', (rawData) => {
-      const editorState = EditorState.createWithContent(convertFromRaw(rawData));
-      this.setState({editorState});
+    socket.emit('check-editor', 'data');
+    socket.on('editor-state', ({text, selection}) => {
+      const editorState = EditorState.createWithContent(convertFromRaw(text));
+      const newSelection = new SelectionState({
+        anchorKey: selection.anchorKey,
+        anchorOffset: selection.anchorOffset,
+        focusKey: selection.focusKey,
+        focusOffset: selection.focusOffset
+      })
+
+      const newEditorState = EditorState.forceSelection(
+        editorState,
+        newSelection
+      )
+      this.setState({editorState: newEditorState});
     })
   }
 
   onChange = editorState => {
     return this.setState({editorState}, () => {
-      const contentSate = editorState.getCurrentContent();
-      socket.emit('editor-state', convertToRaw(contentSate));
+      const selection = editorState.getSelection();
+      const text = convertToRaw(editorState.getCurrentContent());
+
+      socket.emit('editor-state', { text, selection });
     });
   };
 

@@ -1,0 +1,1 @@
+{"version":3,"sources":["scss/index.min.css"],"names":[],"mappings":"AAAA,KAAK,QAAQ,CAAC,QAAQ,aAAa,yBAAyB,gBAAgB,aAAa","file":"static/css/main.6b8bf651.css","sourcesContent":["body{margin:0}.editor{padding:12px;border:1px solid #2b2b2b;max-width:700px;margin:0 auto}\n\n\n// WEBPACK FOOTER //\n// ./src/scss/index.min.css"],"sourceRoot":""}
