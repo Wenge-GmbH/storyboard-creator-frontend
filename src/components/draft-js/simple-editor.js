@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, SelectionState } from 'draft-js';
 import Suggestions from './suggestions';
 const io = require('socket.io-client');
-console.log(process.env.SOCKET_URL);
 const socket = io(process.env.SOCKET_URL || 'http://localhost:3001');
 
 

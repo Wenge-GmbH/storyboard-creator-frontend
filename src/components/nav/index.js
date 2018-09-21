@@ -7,6 +7,7 @@ class Nav extends Component {
       <nav>
         <Link to="/">Dashboard</Link>
         <Link to="/storyboard">Storyboard</Link>
+        <Link to="/draft-js">Draft JS</Link>
       </nav>
     );
   }
