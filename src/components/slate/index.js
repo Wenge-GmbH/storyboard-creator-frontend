@@ -40,7 +40,10 @@ export default class SlateEditor extends Component {
     value: initialValue,
   }
 
-  onChange = ({ value }) => {
+  onChange = (change) => {
+    console.log(change.operations);
+    //https://github.com/ianstormtaylor/slate/blob/master/examples/syncing-operations/index.js
+    const { value } = change;
     this.setState({ value });
   }
 
