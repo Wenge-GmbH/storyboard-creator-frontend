@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { Value } from 'slate';
+const io = require('socket.io-client');
+const socket = io(process.env.SOCKET_URL || 'http://localhost:3001');
 
 // progress link
 // https://docs.slatejs.org/walkthroughs/applying-custom-formatting

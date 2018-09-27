@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, SelectionState } from 'draft-js';
 import Suggestions from './suggestions';
-const io = require('socket.io-client');
-const socket = io(process.env.SOCKET_URL || 'http://localhost:3001');
-
-
 
 class SimpleEditor extends Component {
   state = {
