@@ -4,9 +4,9 @@ import { Value } from 'slate';
 
 import plugins from './prepare-plugins';
 
-
+import axios from 'axios';
 const io = require('socket.io-client');
-const socket = io(process.env.SOCKET_URL || 'http://localhost:3001');
+const socket = io('/');
 
 // progress link
 // https://docs.slatejs.org/walkthroughs/applying-custom-formatting
@@ -48,19 +48,27 @@ export default class SlateEditor extends Component {
     //https://github.com/ianstormtaylor/slate/blob/master/examples/syncing-operations/index.js
     const { value, operations } = change;
     this.setState({ value });
-    socket.emit('sync-editor', operations);
+    socket.emit('sync-editor', {
+      operations,
+      state: JSON.stringify(value.toJSON())
+    });
   }
   componentDidMount() {
+    axios.get('/editor-state').then(({data}) => {
+      console.log('axios');
+      const actualState = Value.fromJSON(data);
+      this.setState({value: actualState})
+    })
     socket.on('sync-editor', (ops) => {
       console.log('as');
       this.applyOperations(ops);
     })
   }
   applyOperations = operations => {
-    console.log('asd');
+    console.log('apply Operations');
     const ops = operations
       .filter(o => o.type !== 'set_selection' && o.type !== 'set_value')
-      
+
     ;
     const { value } = this.state
     const change = value.change().applyOperations(ops);
