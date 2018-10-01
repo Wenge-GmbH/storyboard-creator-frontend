@@ -44,11 +44,28 @@ export default class SlateEditor extends Component {
     value: initialValue,
   }
 
-  onChange = (change) => {
-    console.log(change.operations);
+  onChange = (change, options = {}) => {
     //https://github.com/ianstormtaylor/slate/blob/master/examples/syncing-operations/index.js
-    const { value } = change;
+    const { value, operations } = change;
     this.setState({ value });
+    socket.emit('sync-editor', operations);
+  }
+  componentDidMount() {
+    socket.on('sync-editor', (ops) => {
+      console.log('as');
+      this.applyOperations(ops);
+    })
+  }
+  applyOperations = operations => {
+    console.log('asd');
+    const ops = operations
+      .filter(o => o.type !== 'set_selection' && o.type !== 'set_value')
+      
+    ;
+    const { value } = this.state
+    const change = value.change().applyOperations(ops);
+    // this.onChange(change, { remote: true })
+    this.setState({value: change.value})
   }
 
   onKeyDown = (e, change) => {
