@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { Value } from 'slate';
+
+import plugins from './prepare-plugins';
+
+
 const io = require('socket.io-client');
 const socket = io(process.env.SOCKET_URL || 'http://localhost:3001');
 
@@ -71,21 +75,6 @@ export default class SlateEditor extends Component {
     }
   }
 
-  renderMark = props => {
-    switch (props.mark.type) {
-      case 'bold':
-        return <strong>{props.children}</strong>
-      case 'code':
-        return <code>{props.children}</code>
-      case 'italic':
-        return <em>{props.children}</em>
-      case 'strikethrough':
-        return <del>{props.children}</del>
-      case 'underline':
-        return <u>{props.children}</u>
-    }
-  }
-
   render() {
     return (
       <div className="editor">
@@ -95,7 +84,6 @@ export default class SlateEditor extends Component {
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
           renderNode={this.renderNode}
-          renderMark={this.renderMark}
         />
       </div>
     )
@@ -111,21 +99,20 @@ const CodeNode = ({ attributes, children }) => (
 
 // const BoldMark= ({ children }) => <strong>{children}</strong>;
 
-const MarkHotkey = ({type, key}) => ({
-    onKeyDown(e, change) {
-      if (!e.ctrlKey || e.key !== key) return;
-      // Prevent the default characters from being inserted.
-      e.preventDefault()
-      change.toggleMark(type)
-      return true
-    }
-  }
-)
 
-const plugins = [
-  MarkHotkey({ key: 'b', type: 'bold' }),
-  MarkHotkey({ key: 'ü', type: 'code' }),
-  MarkHotkey({ key: 'i', type: 'italic' }),
-  MarkHotkey({ key: '~', type: 'strikethrough' }),
-  MarkHotkey({ key: 'u', type: 'underline' }),
-];
+// const renderMarks = () => ({
+//   renderMark: props => {
+//     switch (props.mark.type) {
+//       case 'bold':
+//         return <strong>{props.children}</strong>
+//       case 'code':
+//         return <code>{props.children}</code>
+//       case 'italic':
+//         return <em>{props.children}</em>
+//       case 'strikethrough':
+//         return <del>{props.children}</del>
+//       case 'underline':
+//         return <u>{props.children}</u>
+//     }
+//   }
+// });
