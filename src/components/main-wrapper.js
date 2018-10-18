@@ -4,9 +4,9 @@ import Nav from './nav';
 class MainWrapper extends Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Nav />
-      </div>
+      </React.Fragment>
     );
   }
 }
